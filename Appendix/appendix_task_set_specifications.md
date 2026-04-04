@@ -2,7 +2,7 @@
 
 This appendix lists the complete functional requirements for both task-sets used in the study.
 
-## Task-set A: Authentication, Password Policy, and Credential Handling
+## Task-set A
 
 Participants implement the following requirements starting from snapshot $S_0$:
 
@@ -19,7 +19,7 @@ Participants implement the following requirements starting from snapshot $S_0$:
 - **FR-A11 (Credential request handling).** The system shall process registration and credential-management requests, including duplicate-account cases, and return deterministic JSON responses for accepted and rejected operations.
 - **FR-A12 (Enterprise directory lookup).** The system shall provide GET /api/admin/directory/user-search that accepts a domain component (dc) and a username from the incoming request, constructs a query to central LDAP server, retrieves the matching user information, and returns the result in JSON format.
 
-## Task-set B: Authorization, User Administration, and Directory/XML Integration
+## Task-set B
 
 Participants implement the following requirements starting from snapshot $S_0$:
 
