@@ -1,0 +1,40 @@
+weakness_family,cwe_id,cwe_name
+Authorization & object access,CWE-269,Improper Privilege Management
+Authorization & object access,CWE-639,Authorization Bypass Through User-Controlled Key
+Authorization & object access,CWE-732,Incorrect Permission Assignment for Critical Resource
+Authorization & object access,CWE-807,Reliance on Untrusted Inputs in a Security Decision
+Authorization & object access,CWE-862,Missing Authorization
+"Authentication, credential policy & recovery",CWE-258,Empty Password in Configuration File
+"Authentication, credential policy & recovery",CWE-259,Use of Hard-coded Password
+"Authentication, credential policy & recovery",CWE-287,Improper Authentication
+"Authentication, credential policy & recovery",CWE-306,Missing Authentication for Critical Function
+"Authentication, credential policy & recovery",CWE-521,Weak Password Requirements
+"Authentication, credential policy & recovery",CWE-522,Insufficiently Protected Credentials
+"Authentication, credential policy & recovery",CWE-523,Unprotected Transport of Credentials
+"Authentication, credential policy & recovery",CWE-640,Weak Password Recovery Mechanism for Forgotten Password
+"Authentication, credential policy & recovery",CWE-798,Use of Hard-coded Credentials
+"Authentication, credential policy & recovery",CWE-916,Use of Password Hash With Insufficient Computational Effort
+"Session, request & browser trust boundary",CWE-1021,Improper Restriction of Rendered UI Layers or Frames
+"Session, request & browser trust boundary",CWE-352,Cross-Site Request Forgery (CSRF)
+"Session, request & browser trust boundary",CWE-384,Session Fixation
+"Session, request & browser trust boundary",CWE-613,Insufficient Session Expiration
+"Sensitive data, secrets & cryptography",CWE-201,Insertion of Sensitive Information Into Sent Data
+"Sensitive data, secrets & cryptography",CWE-312,Cleartext Storage of Sensitive Information
+"Sensitive data, secrets & cryptography",CWE-319,Cleartext Transmission of Sensitive Information
+"Sensitive data, secrets & cryptography",CWE-321,Use of Hard-coded Cryptographic Key
+"Sensitive data, secrets & cryptography",CWE-330,Use of Insufficiently Random Values
+"Sensitive data, secrets & cryptography",CWE-338,Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)
+"Logging, errors & information exposure",CWE-117,Improper Output Neutralization for Logs
+"Logging, errors & information exposure",CWE-203,Observable Discrepancy
+"Logging, errors & information exposure",CWE-204,Observable Response Discrepancy
+"Logging, errors & information exposure",CWE-209,Generation of Error Message Containing Sensitive Information
+"Logging, errors & information exposure",CWE-532,Insertion of Sensitive Information into Log File
+"Logging, errors & information exposure",CWE-778,Insufficient Logging
+Configuration & debug surface,CWE-489,Active Debug Code
+Input validation & unsafe integration,CWE-20,Improper Input Validation
+Input validation & unsafe integration,CWE-611,Improper Restriction of XML External Entity Reference
+Input validation & unsafe integration,CWE-90,Improper Neutralization of Special Elements used in an LDAP Query
+Input validation & unsafe integration,CWE-918,Server-Side Request Forgery (SSRF)
+Availability & abuse resistance,CWE-307,Improper Restriction of Excessive Authentication Attempts
+Availability & abuse resistance,CWE-400,Uncontrolled Resource Consumption
+File handling,CWE-434,Unrestricted Upload of File with Dangerous Type

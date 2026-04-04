@@ -1,0 +1,10 @@
+weakness_family,pre,post,change_pct
+Authorization & object access,30,14,53.3
+"Authentication, credential policy & recovery",47,26,44.7
+"Session, request & browser trust boundary",8,8,0.0
+"Sensitive data, secrets & cryptography",16,15,6.2
+"Logging, errors & information exposure",28,20,28.6
+Configuration & debug surface,12,8,33.3
+Input validation & unsafe integration,6,4,33.3
+Availability & abuse resistance,13,15,-15.4
+File handling,2,1,50.0

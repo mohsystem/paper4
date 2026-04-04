@@ -1,0 +1,140 @@
+Repo Name,condition,weakness_family,count
+llm-study26-01-post,post,"Authentication, credential policy & recovery",1
+llm-study26-01-post,post,Authorization & object access,1
+llm-study26-01-post,post,Configuration & debug surface,1
+llm-study26-01-post,post,"Logging, errors & information exposure",1
+llm-study26-01-post,post,"Sensitive data, secrets & cryptography",1
+llm-study26-01-pre,pre,Authorization & object access,1
+llm-study26-01-pre,pre,Configuration & debug surface,1
+llm-study26-01-pre,pre,"Logging, errors & information exposure",3
+llm-study26-01-pre,pre,"Sensitive data, secrets & cryptography",3
+llm-study26-02-post,post,"Authentication, credential policy & recovery",1
+llm-study26-02-post,post,Authorization & object access,1
+llm-study26-02-pre,pre,"Authentication, credential policy & recovery",8
+llm-study26-02-pre,pre,Configuration & debug surface,2
+llm-study26-02-pre,pre,"Logging, errors & information exposure",2
+llm-study26-02-pre,pre,"Sensitive data, secrets & cryptography",4
+llm-study26-02-pre,pre,"Session, request & browser trust boundary",1
+llm-study26-03-post,post,"Authentication, credential policy & recovery",3
+llm-study26-03-post,post,Authorization & object access,6
+llm-study26-03-post,post,Availability & abuse resistance,3
+llm-study26-03-post,post,Configuration & debug surface,1
+llm-study26-03-post,post,"Logging, errors & information exposure",3
+llm-study26-03-post,post,"Sensitive data, secrets & cryptography",1
+llm-study26-03-post,post,"Session, request & browser trust boundary",1
+llm-study26-03-pre,pre,"Authentication, credential policy & recovery",1
+llm-study26-03-pre,pre,Authorization & object access,5
+llm-study26-03-pre,pre,Availability & abuse resistance,2
+llm-study26-03-pre,pre,Configuration & debug surface,1
+llm-study26-03-pre,pre,File handling,1
+llm-study26-03-pre,pre,"Logging, errors & information exposure",3
+llm-study26-03-pre,pre,"Sensitive data, secrets & cryptography",1
+llm-study26-03-pre,pre,"Session, request & browser trust boundary",1
+llm-study26-04-post,post,"Authentication, credential policy & recovery",3
+llm-study26-04-post,post,Authorization & object access,1
+llm-study26-04-post,post,Configuration & debug surface,1
+llm-study26-04-post,post,"Logging, errors & information exposure",2
+llm-study26-04-post,post,"Sensitive data, secrets & cryptography",1
+llm-study26-04-pre,pre,"Authentication, credential policy & recovery",5
+llm-study26-04-pre,pre,Authorization & object access,5
+llm-study26-04-pre,pre,Availability & abuse resistance,1
+llm-study26-04-pre,pre,Configuration & debug surface,1
+llm-study26-04-pre,pre,Input validation & unsafe integration,1
+llm-study26-04-pre,pre,"Logging, errors & information exposure",1
+llm-study26-04-pre,pre,"Sensitive data, secrets & cryptography",1
+llm-study26-04-pre,pre,"Session, request & browser trust boundary",1
+llm-study26-05-post,post,"Authentication, credential policy & recovery",3
+llm-study26-05-post,post,Authorization & object access,2
+llm-study26-05-post,post,Availability & abuse resistance,1
+llm-study26-05-post,post,Configuration & debug surface,1
+llm-study26-05-post,post,"Logging, errors & information exposure",3
+llm-study26-05-post,post,"Sensitive data, secrets & cryptography",2
+llm-study26-05-pre,pre,"Authentication, credential policy & recovery",8
+llm-study26-05-pre,pre,Authorization & object access,4
+llm-study26-05-pre,pre,Availability & abuse resistance,1
+llm-study26-05-pre,pre,Configuration & debug surface,1
+llm-study26-05-pre,pre,"Logging, errors & information exposure",2
+llm-study26-06-post,post,"Authentication, credential policy & recovery",3
+llm-study26-06-post,post,Availability & abuse resistance,1
+llm-study26-06-post,post,"Logging, errors & information exposure",1
+llm-study26-06-post,post,"Sensitive data, secrets & cryptography",2
+llm-study26-06-pre,pre,"Authentication, credential policy & recovery",4
+llm-study26-06-pre,pre,Authorization & object access,2
+llm-study26-06-pre,pre,Availability & abuse resistance,2
+llm-study26-06-pre,pre,Configuration & debug surface,1
+llm-study26-06-pre,pre,File handling,1
+llm-study26-06-pre,pre,Input validation & unsafe integration,1
+llm-study26-06-pre,pre,"Logging, errors & information exposure",2
+llm-study26-06-pre,pre,"Sensitive data, secrets & cryptography",1
+llm-study26-07-post,post,"Authentication, credential policy & recovery",4
+llm-study26-07-post,post,Authorization & object access,1
+llm-study26-07-post,post,Availability & abuse resistance,4
+llm-study26-07-post,post,Configuration & debug surface,1
+llm-study26-07-post,post,"Logging, errors & information exposure",3
+llm-study26-07-post,post,"Sensitive data, secrets & cryptography",1
+llm-study26-07-pre,pre,"Authentication, credential policy & recovery",5
+llm-study26-07-pre,pre,Authorization & object access,2
+llm-study26-07-pre,pre,Availability & abuse resistance,2
+llm-study26-07-pre,pre,Configuration & debug surface,2
+llm-study26-07-pre,pre,"Logging, errors & information exposure",2
+llm-study26-07-pre,pre,"Sensitive data, secrets & cryptography",1
+llm-study26-08-post,post,"Authentication, credential policy & recovery",4
+llm-study26-08-post,post,Authorization & object access,1
+llm-study26-08-post,post,Availability & abuse resistance,1
+llm-study26-08-post,post,Configuration & debug surface,1
+llm-study26-08-post,post,Input validation & unsafe integration,1
+llm-study26-08-post,post,"Logging, errors & information exposure",1
+llm-study26-08-post,post,"Sensitive data, secrets & cryptography",1
+llm-study26-08-pre,pre,"Authentication, credential policy & recovery",4
+llm-study26-08-pre,pre,Authorization & object access,3
+llm-study26-08-pre,pre,Configuration & debug surface,1
+llm-study26-08-pre,pre,"Logging, errors & information exposure",1
+llm-study26-08-pre,pre,"Sensitive data, secrets & cryptography",1
+llm-study26-09-post,post,"Authentication, credential policy & recovery",1
+llm-study26-09-post,post,Availability & abuse resistance,1
+llm-study26-09-post,post,Configuration & debug surface,1
+llm-study26-09-post,post,Input validation & unsafe integration,2
+llm-study26-09-post,post,"Logging, errors & information exposure",3
+llm-study26-09-post,post,"Sensitive data, secrets & cryptography",2
+llm-study26-09-post,post,"Session, request & browser trust boundary",3
+llm-study26-09-pre,pre,"Authentication, credential policy & recovery",5
+llm-study26-09-pre,pre,Authorization & object access,3
+llm-study26-09-pre,pre,Availability & abuse resistance,1
+llm-study26-09-pre,pre,Configuration & debug surface,1
+llm-study26-09-pre,pre,"Logging, errors & information exposure",4
+llm-study26-09-pre,pre,"Sensitive data, secrets & cryptography",2
+llm-study26-09-pre,pre,"Session, request & browser trust boundary",1
+llm-study26-10-post,post,"Authentication, credential policy & recovery",1
+llm-study26-10-post,post,Authorization & object access,1
+llm-study26-10-post,post,Availability & abuse resistance,2
+llm-study26-10-post,post,Configuration & debug surface,1
+llm-study26-10-post,post,File handling,1
+llm-study26-10-post,post,Input validation & unsafe integration,1
+llm-study26-10-post,post,"Logging, errors & information exposure",3
+llm-study26-10-post,post,"Sensitive data, secrets & cryptography",1
+llm-study26-10-post,post,"Session, request & browser trust boundary",3
+llm-study26-10-pre,pre,"Authentication, credential policy & recovery",3
+llm-study26-10-pre,pre,Availability & abuse resistance,1
+llm-study26-10-pre,pre,Input validation & unsafe integration,1
+llm-study26-10-pre,pre,"Logging, errors & information exposure",2
+llm-study26-10-pre,pre,"Sensitive data, secrets & cryptography",1
+llm-study26-10-pre,pre,"Session, request & browser trust boundary",1
+llm-study26-11-post,post,"Authentication, credential policy & recovery",2
+llm-study26-11-post,post,Availability & abuse resistance,1
+llm-study26-11-post,post,"Sensitive data, secrets & cryptography",2
+llm-study26-11-post,post,"Session, request & browser trust boundary",1
+llm-study26-11-pre,pre,"Authentication, credential policy & recovery",2
+llm-study26-11-pre,pre,Authorization & object access,2
+llm-study26-11-pre,pre,Availability & abuse resistance,1
+llm-study26-11-pre,pre,Configuration & debug surface,1
+llm-study26-11-pre,pre,Input validation & unsafe integration,3
+llm-study26-11-pre,pre,"Logging, errors & information exposure",3
+llm-study26-11-pre,pre,"Sensitive data, secrets & cryptography",1
+llm-study26-11-pre,pre,"Session, request & browser trust boundary",1
+llm-study26-12-post,post,Availability & abuse resistance,1
+llm-study26-12-post,post,"Sensitive data, secrets & cryptography",1
+llm-study26-12-pre,pre,"Authentication, credential policy & recovery",2
+llm-study26-12-pre,pre,Authorization & object access,3
+llm-study26-12-pre,pre,Availability & abuse resistance,2
+llm-study26-12-pre,pre,"Logging, errors & information exposure",3
+llm-study26-12-pre,pre,"Session, request & browser trust boundary",2

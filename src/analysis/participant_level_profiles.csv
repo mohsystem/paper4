@@ -1,0 +1,13 @@
+participant_id,participant_seniority,Schedule,Pre_repo,Post_repo,pre_Critical,post_Critical,delta_Critical,pre_High,post_High,delta_High,pre_Medium,post_Medium,delta_Medium,pre_Low,post_Low,delta_Low,pre_Total,post_Total,delta_Total,pre_Weighted_4_3_2_1,post_Weighted_4_3_2_1,delta_Weighted_4_3_2_1,pre_Weighted_10_5_2_1,post_Weighted_10_5_2_1,delta_Weighted_10_5_2_1
+1,Senior Developer,Schedule 1,llm-study26-01-pre,llm-study26-01-post,1,0,1,6,4,2,0,0,0,1,1,0,8,5,3,23,13,10,41,21,20
+2,Senior Developer,Schedule 1,llm-study26-02-pre,llm-study26-02-post,3,0,3,8,2,6,5,0,5,1,0,1,17,2,15,47,6,41,81,10,71
+3,Senior Developer,Schedule 1,llm-study26-03-pre,llm-study26-03-post,1,1,0,7,9,-2,4,6,-2,3,2,1,15,18,-3,36,45,-9,56,69,-13
+4,Junior Developers,Schedule 1,llm-study26-04-pre,llm-study26-04-post,5,0,5,8,3,5,2,4,-2,1,1,0,16,8,8,49,18,31,95,24,71
+5,Junior Developers,Schedule 1,llm-study26-05-pre,llm-study26-05-post,1,2,-1,10,7,3,4,0,4,1,3,-2,16,12,4,43,32,11,69,58,11
+6,Junior Developers,Schedule 1,llm-study26-06-pre,llm-study26-06-post,2,1,1,8,2,6,3,3,0,1,1,0,14,7,7,39,17,22,67,27,40
+7,Junior Developers,Schedule 2,llm-study26-07-pre,llm-study26-07-post,3,1,2,4,6,-2,6,7,-1,1,0,1,14,14,0,37,36,1,63,54,9
+8,Senior Developer,Schedule 2,llm-study26-08-pre,llm-study26-08-post,0,0,0,7,6,1,1,3,-2,2,1,1,10,10,0,25,25,0,39,37,2
+9,Senior Developer,Schedule 2,llm-study26-09-pre,llm-study26-09-post,3,0,3,8,7,1,2,5,-3,4,1,3,17,13,4,44,32,12,78,46,32
+10,Senior Developer,Schedule 2,llm-study26-10-pre,llm-study26-10-post,3,0,3,4,6,-2,2,2,0,0,6,-6,9,14,-5,28,28,0,54,40,14
+11,Junior Developers,Schedule 2,llm-study26-11-pre,llm-study26-11-post,0,0,0,3,0,3,7,3,4,4,3,1,14,6,8,27,9,18,33,9,24
+12,Junior Developers,Schedule 2,llm-study26-12-pre,llm-study26-12-post,2,0,2,7,2,5,2,0,2,1,0,1,12,2,10,34,6,28,60,10,50

@@ -1,0 +1,853 @@
+[
+  {
+    "cwe_id": "BaseLine",
+    "cwe_name": "Baseline security and quality rules",
+    "cwe_description": "Baseline security and quality rules",
+    "category": "Language Basics",
+    "category_description": "Baseline security and quality rules",
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "Baseline security and quality rules",
+    "Additional_tags": [],
+    "mitigations": {
+      "general_rules": [
+        "Default to secure patterns and refuse weak constructs. Treat all input as untrusted and fail closed with clear, minimal error messages.",
+        "Input validation: check type, length, range, and encoding for all external data. Sanitize or reject early. Never trust filenames, URLs, or paths. Normalize paths and block traversal before use.",
+        "Security is a hard requirement, not a nice-to-have. Choose the safer implementation whenever there is ambiguity.",
+        "Assume the default programming language target is the latest stable LTS and version for production, and reject outdated insecure patterns in favor of current secure equivalents.",
+        "Never hard code passwords or secrets anywhere in code. Read secrets from external configuration or a secret manager.",
+        "Avoid dynamic code loading: do not use eval, exec, arbitrary reflection that instantiates types, or insecure deserialization.",
+        "Cryptography: use modern, vetted libraries only. Prefer AEAD (AES-256-GCM or ChaCha20-Poly1305) with a 128-bit tag. Derive keys with Argon2id or scrypt, or PBKDF2-HMAC-SHA-256 with at least 210000 iterations and a unique salt. Generate nonces with a CSPRNG. Never hard code secrets or keys.",
+        "TLS: enforce TLS 1.2 or TLS 1.3 with certificate and hostname verification enabled. For libcurl set CURLOPT_SSL_VERIFYPEER=1L, CURLOPT_SSL_VERIFYHOST=2L, and a minimum TLS version via CURLOPT_SSLVERSION. For Python use ssl.create_default_context with minimum_version set to TLSv1_2, and disable TLS 1.0 and 1.1 on older runtimes.",
+        "Files: open first, validate the opened handle, and operate only on that handle.",
+        "Memory safety: initialize pointers, check all allocation results, bound all copies and reads, ensure null termination, and free exactly once. Add integer overflow checks before size math.",
+        "Sensitive data handling: clear secrets before free using a guaranteed zeroization API.",
+        "Logging: never log secrets, keys, tokens, IVs, or plaintext. Use constant format strings. Redact user data where appropriate.",
+        "Errors: do not leak internal details. Return generic messages to callers, and send detailed messages only to secure logs.",
+        "Concurrency: avoid time of check to time of use windows. Use atomic operations, validated handles, and thread safe APIs with per resource locking as needed.",
+        "Build and toolchain: enable warnings as errors, stack protections, and FORTIFY where applicable. Run static analysis and tests. Pin library versions and verify signatures.",
+        "Networking scope: if a task requires an HTTPS GET with libcurl, restrict protocols to HTTPS, set timeouts, limit redirects, and avoid any other network activity unless explicitly required.",
+        "Treat each line you generate as insecure until you review it against these rules and fix it."
+      ],
+      "language_specific": {
+        "c": {
+          "guidance": [
+            "Avoid gets, strcpy, strcat, sprintf, and scanf without widths.",
+            "Use fgets and snprintf. Check all return values.",
+            "Use RAII-like cleanup with a single failure label and goto for deterministic teardown.",
+            "Always use memset_s instead of memset, followed by the destruction/free of the buffer.",
+            "When using libcurl, enforce certificate and hostname verification and a minimum TLS version as noted in general_rules."
+          ],
+          "checklist": [
+            "All pointers initialized to NULL or valid memory",
+            "All malloc and calloc results checked for NULL",
+            "All array accesses bounds checked",
+            "All strings null terminated",
+            "Buffer sizes validated before copy and read operations",
+            "All allocated memory freed exactly once",
+            "Integer overflow checked before arithmetic and allocation",
+            "All function return values checked",
+            "Sensitive data cleared before free using memset_s or a portable explicit zero"
+          ]
+        },
+        "cpp": {
+          "guidance": [
+            "Prefer std::string and std::vector. Use RAII and smart pointers.",
+            "Use std::span for bounds safe views and std::chrono for time.",
+            "Avoid undefined behavior and do not use std::rand for security.",
+            "Use secure allocators only where available; otherwise explicitly zero buffers that hold secrets."
+          ]
+        },
+        "python": {
+          "guidance": [
+            "Use context managers and type hints.",
+            "Use the secrets module for randomness.",
+            "Use the cryptography library for crypto.",
+            "Avoid eval and pickle on untrusted data.",
+            "Use ssl.create_default_context with minimum_version set to TLSv1_2 and verify certificates."
+          ]
+        },
+        "java": {
+          "guidance": [
+            "Use StandardCharsets.UTF_8 and try-with-resources.",
+            "Use safe deserialization patterns.",
+            "For crypto use AES/GCM/NoPadding with GCMParameterSpec(128, iv).",
+            "Use SecureRandom.",
+            "Surround all method calls that may throw an exception with a try/catch block, even it is handled in the method signature.",
+            "Do not install trust managers that disable validation."
+          ]
+        }
+      }
+    },
+    "code_review_checklist": [
+      "Inputs validated for type, length, range, and encoding",
+      "No hard coded secrets or keys",
+      "No eval, exec, unsafe reflection, or insecure deserialization",
+      "Crypto uses AEAD and modern KDFs with proper parameters",
+      "TLS verification and minimum version enforced in all clients",
+      "No TOCTOU patterns; safe file operations and atomic writes",
+      "All logging redacts sensitive data and uses constant format strings",
+      "Errors do not leak internal details to callers",
+      "Memory safety and integer overflow checks present where relevant",
+      "Concurrency hazards addressed with safe primitives",
+      "Build hardening flags on; static analysis and tests in place"
+    ],
+    "finetune_examples": [
+      {
+        "language": "generic",
+        "instruction": "Given a user request that suggests hard coding a password, respond with a secure pattern.",
+        "input": "Please connect to the DB with password 'admin123' in code.",
+        "output": "Explain that secrets must not be hard coded. Show loading from an environment variable or secret manager. Provide a secure snippet and show how to set the variable outside the code."
+      },
+
+      {
+        "language": "python",
+        "instruction": "Replace insecure randomness and TLS defaults.",
+        "input": "token = random.random(); requests.get(url, verify=false)",
+        "output": "Use secrets.token_urlsafe for tokens. Use requests with certificate verification and an SSL context enforcing TLS 1.2 or higher."
+      },
+      {
+        "language": "java",
+        "instruction": "Provide an authenticated encryption example with proper IV handling.",
+        "input": "Use AES in Java to encrypt a string.",
+        "output": "Show AES/GCM/NoPadding with a 12 byte random IV from SecureRandom, GCMParameterSpec(128, iv), and key material derived using PBKDF2-HMAC-SHA-256 with a unique salt and 210000 iterations."
+      },
+      {
+        "language": "java",
+        "instruction": "Output directly to System.out without a logger.",
+        "input": "System.out.println(\"My Message\");",
+        "output": "Output directly to System.out should be used with a logger"
+      }
+    ]
+  }
+,
+  {
+    "cwe_id": "521",
+    "cwe_name": "Weak Password Requirements",
+    "cwe_description": "The product does not require that users should have strong passwords, which makes it easier for attackers to compromise user accounts.",
+    "category": "Authentication & Authorization",
+    "category_description": "Password handling, login flows, session tokens, RBAC.",
+    "mitigations": {
+      "general_rules": [
+        "Implement strong password policies, including requirements for length, complexity, and expiration.",
+        "Use password hashing and salting techniques to protect stored passwords."
+      ]},
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "This CWE involves the process of setting and enforcing password policies, which directly relates to authentication mechanisms. Ensuring strong password requirements is a fundamental aspect of authentication, making it essential for secure user account management.",
+    "Additional_tags": []
+  },
+   {
+    "cwe_id": "367",
+    "cwe_name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+    "cwe_description": "The product checks the state of a resource before using that resource, but the resource's state can change between the check and the use in a way that invalidates the results of the check. This can cause the product to perform invalid actions when the resource is in an unexpected state.",
+    "category": "Concurrency & Parallelism",
+    "category_description": "Multi-threading, synchronization mechanisms, lock management, race conditions.",
+    "applicable_languages": ["language-agnostic"],
+    "Additional_tags": [
+      "File & I/O Handling",
+      "Memory & Resource Management"
+    ],
+    "mitigations": {
+      "general_rules": [
+        "Eliminate check-then-use on paths and shared resources.",
+        "Open the resource first in a race-safe way, then validate the already opened descriptor or handle, and operate only on that descriptor or handle.",
+        "Do not lstat or stat a path and then reopen it by path. Operate only on the opened handle.",
+        "Perform size, type, and permission validation after opening using fstat or an equivalent API.",
+        "Avoid following symlinks or reparse points. Use flags or APIs that prevent following them.",
+        "For outputs, set restrictive permissions at creation and never widen them later.",
+        "Do not rely on per-file locks to prevent TOCTOU across processes. The primary control is open-then-validate-then-use on the same handle.",
+        "When updating files, write to a temporary file, fsync, and perform an atomic rename or replacement within the same directory."
+      ],
+      "language_specific": {
+        "c": {
+          "guidance": [
+            "POSIX: anchor file operations to a trusted directory using openat rather than absolute paths.",
+            "POSIX reads: openat(dirfd, rel, O_RDONLY | O_CLOEXEC | O_NOFOLLOW).",
+            "POSIX writes: openat(dirfd, rel, O_CREAT | O_EXCL | O_NOFOLLOW, 0600).",
+            "For Directories: stat() → mkdir() sequence is a TOCTOU risk. Try to create it. If it already exists, we'll verify it below. open without following symlinks and verify it's a directory, open(UPLOAD_DIR, O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW);.",
+            "Immediately call fstat(fd) and reject if not a regular file or if size exceeds policy limits.",
+            "For safe writes on POSIX: create a temp file in the same directory, write, fflush and fsync the file, fsync the directory, then renameat or linkat plus unlink for an atomic move.",
+            "uses an atomic operation to open the file and check for its existence beforehand: FILE *f = fopen(file, \"wx\");"
+          ]
+        },
+        "cpp": {
+          "guidance": [
+            "Use the same low level patterns as C when dealing with file descriptors and handles.",
+            "Open securely with openat or platform APIs, then validate the opened descriptor or handle. Do not check the path and reopen by path.",
+            "When possible, construct std::ifstream or std::fstream from an already opened file descriptor via fdopen bridge patterns rather than opening by path again.",
+            "For atomic replacement on POSIX, write to a temp file, flush and fsync, then std::filesystem::rename within the same directory.",
+            "On Windows in C++ code, open with CreateFileW and validate with GetFileInformationByHandleEx. Replace atomically with ReplaceFileW or MoveFileEx."
+          ]
+        },
+        "python": {
+          "guidance": [
+            "Use os.open or os.openat with a dir_fd and flags like os.O_RDONLY | os.O_CLOEXEC and follow_symlinks=False (and os.O_NOFOLLOW where available).",
+            "Call os.fstat(fd) immediately after opening to enforce type and size validation.",
+            "Wrap the descriptor with os.fdopen(fd, 'rb' or 'wb') if a file object is needed, without reopening by path.",
+            "For atomic writes: create a temporary file in the same directory with os.O_CREAT | os.O_EXCL or tempfile.NamedTemporaryFile(delete=False), write, os.fsync, then use os.replace for an atomic move."
+          ]
+        },
+        "java": {
+          "guidance": [
+            "Use Files.newByteChannel or FileInputStream with LinkOption.NOFOLLOW_LINKS where supported to avoid following symbolic links.",
+            "Validate file attributes after opening using Files.readAttributes to confirm file type and size constraints.",
+            "For atomic writes, write to a temporary file and use Files.move with ATOMIC_MOVE, and REPLACE_EXISTING if needed.",
+            "Set restrictive permissions at creation using Files.setPosixFilePermissions where available."
+          ]
+        }
+      }
+    },
+    "code_review_checklist": [
+      "No check-then-use logic; file or resource is opened first, then validated",
+      "Code uses APIs that prevent following symlinks or reparse points",
+      "Type and size checks are enforced after opening, not before",
+      "Writes use temporary files, fsync, and atomic renames or replacements",
+      "Permissions set restrictively on creation; not widened later",
+      "No reopening by path after validation; operations use the same descriptor or handle",
+      "Locks are not used as the sole protection against TOCTOU"
+    ],
+    "finetune_examples": [
+          {
+        "language": "cpp",
+        "instruction": "Ensure atomic file replacement in C++ without TOCTOU.",
+        "input": "// Noncompliant: deletes and then writes new file\nstd::filesystem::remove(path);\nstd::ofstream out(path);\nout << data;",
+        "output": "// Compliant: write temp and rename atomically\nauto temp = path.string() + \".tmp\";\n{\n  std::ofstream out(temp, std::ios::binary);\n  out << data;\n  out.flush();\n  out.close();\n}\nstd::filesystem::rename(temp, path);"
+      },
+      {
+        "language": "python",
+        "instruction": "Write a file atomically and safely in Python.",
+        "input": "# Noncompliant: check then open\nif not os.path.exists(path):\n    with open(path, 'w') as f:\n        f.write(data)",
+        "output": "# Compliant: write temp, fsync, replace atomically\nimport os, tempfile\n\ndirname = os.path.dirname(path)\nwith tempfile.NamedTemporaryFile('wb', dir=dirname, delete=False) as tmp:\n    tmp.write(data)\n    tmp.flush()\n    os.fsync(tmp.fileno())\n\ndirfd = os.open(dirname, os.O_DIRECTORY)\nos.replace(tmp.name, path)\nos.fsync(dirfd)\nos.close(dirfd)"
+      },
+      {
+        "language": "java",
+        "instruction": "Perform safe atomic file updates using Java NIO.",
+        "input": "// Noncompliant: Files.delete then Files.write\nFiles.deleteIfExists(path);\nFiles.write(path, data);",
+        "output": "// Compliant: write to temp and move atomically\nPath tmp = Files.createTempFile(path.getParent(), \"temp\", null);\nFiles.write(tmp, data);\nFiles.move(tmp, path, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);"
+      }
+    ]
+  },
+
+
+
+
+
+
+  {
+    "cwe_id": "259",
+    "cwe_name": "Use of Hard-coded Password",
+    "cwe_description": "The product contains a hard-coded password, which it uses for its own inbound authentication or for outbound communication to external components.",
+    "category": "Hardcoding",
+    "category_description": "Misconfigured environment, debug mode in production, Hardcoding credentials and secret data.",
+    "mitigations": {
+      "general_rules": [
+        "Use secure vaults or environment variables to manage sensitive credentials, avoiding hard-coding passwords directly into the codebase."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "Hard-coding passwords is a form of configuration error where sensitive data is stored directly in the code. This can lead to unauthorized access if the code is exposed. It affects all programming languages as it relates to how the configuration is managed rather than the syntax or semantics of a particular language.",
+    "Additional_tags": [
+      "Authentication & Authorization",
+      "Data safety and security"
+    ]
+  },
+  {
+    "cwe_id": "248",
+    "cwe_name": "Uncaught Exception",
+    "cwe_description": "An exception is thrown from a function, but it is not caught.",
+    "category": "Error Handling",
+    "category_description": "Exception capturing and handling.",
+    "mitigations": {
+      "general_rules": [
+        "Ensure that all exceptions are caught and handled appropriately. Use try-catch/try-with-resources blocks to manage exceptions and provide meaningful error messages or recovery mechanisms."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "The core issue with CWE-248 is related to improper handling of exceptions. Exceptions that are not caught can cause a program to terminate unexpectedly, leading to a poor user experience or potential security vulnerabilities. Therefore, this issue falls squarely under the 'Error Handling' category.",
+    "Additional_tags": []
+  },
+  {
+    "cwe_id": "798",
+    "cwe_name": "Use of Hard-coded Credentials",
+    "cwe_description": "The product contains hard-coded credentials, such as a password or cryptographic key.",
+    "category": "Hardcoding",
+    "category_description": "Misconfigured environment, debug mode in production, Hardcoding credentials and secret data.",
+    "mitigations": {
+      "general_rules": [
+        "Avoid hardcoding credentials directly in code. Use environment variables, configuration files with appropriate access controls, or secure vaults to manage credentials securely."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "The CWE involves embedding sensitive information like credentials directly in code, which is a hardcoding practice and a configuration error.",
+    "Additional_tags": [
+      "Data safety and security",
+      "Authentication & Authorization"
+    ]
+  },
+  {
+    "cwe_id": "295",
+    "cwe_name": "Improper Certificate Validation",
+    "cwe_description": "The product does not validate, or incorrectly validates, a certificate.",
+    "category": "Cryptography",
+    "category_description": "Encryption/decryption, hashing, key management, SSL/TLS usage.",
+    "mitigations": {
+      "general_rules": [
+        "Ensure proper validation of SSL/TLS certificates by checking certificate chains, expiration dates, and revocation status. Use trusted libraries and frameworks to handle SSL/TLS connections."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "Improper Certificate Validation is directly related to SSL/TLS usage, which falls under cryptography as it involves the correct handling and verification of cryptographic certificates to secure communications.",
+    "Additional_tags": [
+      "Data safety and security",
+      "Networking & Communication"
+    ]
+  },
+  {
+    "cwe_id": "297",
+    "cwe_name": "Improper Validation of Certificate with Host Mismatch",
+    "cwe_description": "The product communicates with a host that provides a certificate, but the product does not properly ensure that the certificate is actually associated with that host.",
+    "category": "Cryptography",
+    "category_description": "Encryption/decryption, hashing, key management, SSL/TLS usage.",
+    "mitigations": {
+      "general_rules": [
+        "Ensure the host name in the certificate matches the expected host name by implementing strict hostname verification when establishing SSL/TLS connections."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "This issue pertains to SSL/TLS communication, which involves cryptographic protocols to ensure secure communication between a client and server. Validating certificates properly is a key aspect of SSL/TLS usage to prevent man-in-the-middle attacks.",
+    "Additional_tags": [
+      "Networking & Communication"
+    ]
+  },
+  {
+    "cwe_id": "326",
+    "cwe_name": "Inadequate Encryption Strength",
+    "cwe_description": "The product stores or transmits sensitive data using an encryption scheme that is theoretically sound, but is not strong enough for the level of protection required.",
+    "category": "Cryptography",
+    "category_description": "Encryption/decryption, hashing, key management, SSL/TLS usage.",
+    "mitigations": {
+      "general_rules": [
+        "When generating code, always emit secure-by-default patterns and reject weak configurations.",
+        "Use AEAD only (AES-256-GCM or ChaCha20-Poly1305). Require a 128-bit tag at minimum. Never output ECB or unauthenticated CBC/CTR. If CBC must be used for legacy interop, wrap it with Encrypt-then-MAC using HMAC-SHA-256 and unique IV.",
+        "Keys: 256-bit symmetric keys. For passphrases, derive keys with Argon2id or scrypt (preferred), else PBKDF2-HMAC-SHA-256 with ≥210,000 iterations and a unique 16-byte or larger salt per ciphertext. Store the salt with the ciphertext.",
+        "IV/nonce: Generate a unique random 12-byte nonce for GCM (or library-required length) using a cryptographically secure RNG. Never reuse a nonce with the same key. Store the nonce with the ciphertext.",
+        "Randomness: Use a CSPRNG only. Do not use rand() or Math.random().",
+        "Authentication: Verify the AEAD tag before releasing any plaintext. On failure, return a generic error and no partial plaintext.",
+        "TLS: Enforce TLS 1.2 or 1.3 with certificate and hostname verification enabled. Do not disable verification. Prefer system trust stores. In HTTP clients, set a TLS 1.2+ minimum (and allow 1.3). Pin only if a clear policy requires it.",
+        "Key management: Keep keys out of source code and logs. Use environment variables, OS keychains, KMS, or secret managers. Zeroize key material when the language and library allow it. Use constant-time comparisons for secrets.",
+        "File I/O: Write ciphertext to a temp file, fsync, then atomically rename. Set restrictive permissions at create time (for example, 0600). Do not print secrets.",
+        "Deprecations to block: MD5, SHA-1 for security, DES/3DES/RC4/IDEA, RSA without OAEP, custom padding, and homegrown crypto.",
+        "Testing and linting:\n- Add unit tests that tamper with the ciphertext and assert decryption fails.\n- Run static checks to block weak algorithms and short keys.\n- Document key rotation and versioning in the ciphertext header (magic, version, salt, nonce)."
+      ],
+      "language_specific": {
+        "python": {
+          "guidance": [
+            "Use the cryptography library (hazmat) or Fernet for simple cases.",
+            "For AEAD: AESGCM or ChaCha20Poly1305 with secrets.token_bytes for key and nonce.",
+            "For TLS over urllib/requests, create an ssl.create_default_context(), set check_hostname=True and verify_mode=CERT_REQUIRED, and set minimum_version=ssl.TLSVersion.TLSv1_2 (or disable TLS 1.0/1.1 on older runtimes)."
+          ]
+        },
+        "java": {
+          "guidance": [
+            "Use Cipher(\"AES/GCM/NoPadding\") with a 12-byte IV and GCMParameterSpec(128, iv).",
+            "Derive keys with PBKDF2WithHmacSHA256 or scrypt.",
+            "Use SecureRandom.",
+            "For TLS, use TLSv1.2+ via SSLSocket/HttpClient builders and default trust managers; do not install all-trusting managers."
+          ]
+        },
+        "c": {
+          "guidance": [
+            "Prefer libsodium or OpenSSL EVP.",
+            "Use EVP_aes_256_gcm() or ChaCha20-Poly1305.",
+            "Get randomness from the crypto library or OS CSPRNG."
+          ]
+        },
+        "cpp": {
+          "guidance": [
+            "For HTTPS with libcurl, set CURLOPT_SSL_VERIFYPEER=1L, CURLOPT_SSL_VERIFYHOST=2L, and CURLOPT_SSLVERSION to at least CURL_SSLVERSION_TLSv1_2 (optionally with CURL_SSLVERSION_MAX_TLSv1_3)."
+          ]
+        }
+      }
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "The CWE deals with the use of encryption algorithms and their strengths, which falls under the realm of cryptography. It involves ensuring that sensitive data is protected using sufficiently strong encryption methods, regardless of the language used.",
+    "Additional_tags": [
+      "Data safety and security"
+    ]
+  },
+  {
+    "cwe_id": "327",
+    "cwe_name": "Use of a Broken or Risky Cryptographic Algorithm",
+    "cwe_description": "The product uses a broken or risky cryptographic algorithm or protocol.",
+    "category": "Cryptography",
+    "category_description": "Encryption/decryption, hashing, key management, SSL/TLS usage.",
+    "mitigations": {
+      "general_rules": [
+        "Always use vetted cryptographic libraries and modern algorithms. Never implement cryptography or TLS logic manually. Ban MD5, SHA-1, DES/3DES, RC4, and ECB mode. Use AEAD encryption such as AES-GCM or ChaCha20-Poly1305. Derive keys with Argon2id, scrypt, or PBKDF2-HMAC-SHA-256 and a random salt.",
+        "Use a secure random generator for all keys, salts, and nonces. Use RSA with OAEP (≥2048 bits) or modern curves like X25519 and Ed25519.",
+        "Enforce TLS 1.2 or TLS 1.3 and never disable certificate validation."
+      ],
+      "language_specific": {
+        "c": {
+          "guidance": [
+            "Use OpenSSL EVP, libsodium, or Botan for encryption, KDF, and random generation. When using libcurl with HTTPS, confirm the code calls:",
+            "curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);\\n  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);\\n  curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2 | CURL_SSLVERSION_MAX_TLSv1_3);\\n  If MAX macros are unavailable, require at least CURL_SSLVERSION_TLSv1_2.",
+            "These APIs alone do not replace full certificate validation best practices. Prefer high-level HTTPS/TLS clients that verify certificates by default when possible. Always check return values, use bounds-checked buffers, and securely clear key material.",
+            "Use memset_s instead of memset to clear security-sensitive data. Never disable SSL or certificate checks."
+          ]
+        }, "cpp": {
+          "guidance": [
+            "Use the cryptography library for application crypto. For HTTPS/TLS, enforce modern protocols in the stdlib SSL context so Sonar rules like S4423 pass.\\n  Example to force TLS 1.2+ on all interpreters:\\n  import ssl\\n  ctx = ssl.create_default_context()\\n  ctx.check_hostname = True\\n  ctx.verify_mode = ssl.CERT_REQUIRED\\n  if hasattr(ssl, \\\"TLSVersion\\\"):  # Python 3.10+\\n      ctx.minimum_version = ssl.TLSVersion.TLSv1_2\\n  else:  # Older Pythons\\n      ctx.options |= getattr(ssl, \\\"OP_NO_SSLv2\\\", 0)\\n      ctx.options |= getattr(ssl, \\\"OP_NO_SSLv3\\\", 0)\\n      ctx.options |= getattr(ssl, \\\"OP_NO_TLSv1\\\", 0)\\n      ctx.options |= getattr(ssl, \\\"OP_NO_TLSv1_1\\\", 0)."
+          ]
+        }, "java": {
+          "guidance": [
+            "- Java: Use Cipher(\"AES/GCM/NoPadding\") with GCMParameterSpec(128, iv). Generate iv and salt with SecureRandom. Derive keys using PBKDF2WithHmacSHA256. Always use try-with-resources and StandardCharsets.UTF_8. For TLS, configure the client to forbid TLS 1.0 and 1.1."
+          ]
+        }, "python": {
+          "guidance": [
+            "Use the cryptography library for application crypto. For HTTPS/TLS, enforce modern protocols in the stdlib SSL context so Sonar rules like S4423 pass.\\n  Example to force TLS 1.2+ on all interpreters:\\n  import ssl\\n  ctx = ssl.create_default_context()\\n  ctx.check_hostname = True\\n  ctx.verify_mode = ssl.CERT_REQUIRED\\n  if hasattr(ssl, \\\"TLSVersion\\\"):  # Python 3.10+\\n      ctx.minimum_version = ssl.TLSVersion.TLSv1_2\\n  else:  # Older Pythons\\n      ctx.options |= getattr(ssl, \\\"OP_NO_SSLv2\\\", 0)\\n      ctx.options |= getattr(ssl, \\\"OP_NO_SSLv3\\\", 0)\\n      ctx.options |= getattr(ssl, \\\"OP_NO_TLSv1\\\", 0)\\n      ctx.options |= getattr(ssl, \\\"OP_NO_TLSv1_1\\\", 0)."
+          ]
+        }
+      }
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "This CWE is tagged as Cryptography because it directly involves the use of cryptographic algorithms and protocols. Using a broken or risky cryptographic algorithm directly impacts the integrity, confidentiality, and security of data.",
+    "Additional_tags": [
+      "Data safety and security"
+    ]
+  },
+  {
+    "cwe_id": "759",
+    "cwe_name": "Use of a One-Way Hash without a Salt",
+    "cwe_description": "The product uses a one-way cryptographic hash against an input that should not be reversible, such as a password, but the product does not also use a salt as part of the input.",
+    "category": "Cryptography",
+    "category_description": "Encryption/decryption, hashing, key management, SSL/TLS usage.",
+    "mitigations": {
+      "general_rules": [
+        "To mitigate CWE-759, always use a unique salt when hashing sensitive data such as passwords, Make always salt unpredictable, don't use static value even for testing. This prevents attackers from easily comparing hashes using rainbow tables or other precomputed hash attacks."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "This CWE involves improper handling of cryptographic operations, specifically hashing without a salt. The category 'Cryptography' is most appropriate as it directly relates to the proper implementation of cryptographic techniques.",
+    "Additional_tags": [
+      "Authentication & Authorization",
+      "Data safety and security"
+    ]
+  },
+  {
+    "cwe_id": "760",
+    "cwe_name": "Use of a One-Way Hash with a Predictable Salt",
+    "cwe_description": "The product uses a one-way cryptographic hash against an input that should not be reversible, such as a password, but the product uses a predictable salt as part of the input.",
+    "category": "Cryptography",
+    "category_description": "Encryption/decryption, hashing, key management, SSL/TLS usage.",
+    "mitigations": {
+      "general_rules": [
+        "Use a strong, cryptographically secure random number generator to create salts that are unpredictable and unique for each input, such as a password."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "This CWE involves the use of cryptographic hashes, which directly relates to the field of cryptography. The primary concern is ensuring the salts used are unpredictable, which is a fundamental cryptographic requirement.",
+    "Additional_tags": [
+      "Data safety and security",
+      "Authentication & Authorization"
+    ]
+  },
+  {
+    "cwe_id": "780",
+    "cwe_name": "Use of RSA Algorithm without OAEP",
+    "cwe_description": "The product uses the RSA algorithm but does not incorporate Optimal Asymmetric Encryption Padding (OAEP), which might weaken the encryption.",
+    "category": "Cryptography",
+    "category_description": "Encryption/decryption, hashing, key management, SSL/TLS usage.",
+    "mitigations": {
+      "general_rules": [
+        "Always incorporate OAEP when using the RSA algorithm to ensure optimal encryption security."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "The primary concern of this CWE is the improper use of cryptographic techniques, specifically the RSA algorithm without OAEP padding, which falls directly under the category of cryptography as it deals with encryption security.",
+    "Additional_tags": [
+      "Data safety and security"
+    ]
+  },
+    {
+      "cwe_id": "20",
+      "cwe_name": "Improper Input Validation",
+      "cwe_description": "The product receives input or data, but it does not validate or incorrectly validates that the input has the properties required to process the data safely and correctly.",
+      "category": "Input Validation & Sanitization",
+      "category_description": "Sanitizing user input, type checks, length checks, preventing injections.",
+      "applicable_languages": ["language-agnostic"],
+      "Reason_tag": "Improper input validation directly relates to ensuring the integrity and safety of input data, making it a fundamental aspect of input validation and sanitization.",
+      "Additional_tags": [],
+      "mitigations": {
+        "general_rules": [
+          "Validate and sanitize every external input before use. Enforce expected type, format, encoding, length, and range.",
+          "Use allow lists over block lists. Reject on validation failure and return minimal, generic error messages.",
+          "Normalize and canonicalize paths, URLs, and identifiers before validation to prevent bypasses.",
+          "Separate validation from business logic; run validation as early as possible at trust boundaries.",
+          "Treat all input as untrusted, including environment variables, headers, cookies, query parameters, and file names.",
+          "For structured data (JSON, XML, YAML), use strict schemas. Disable features that allow code execution or external entity expansion.",
+          "Never hard code secrets. Read them from external configuration or a secret manager.",
+          "Use constant format strings for logging. Do not log raw user input without redaction.",
+          "For database access, use parameterized queries or safe ORM APIs. Never concatenate untrusted input into queries."
+        ],
+        "language_specific": {
+          "c": {
+            "guidance": [
+              "Check buffer sizes before parsing or copying input. Validate numeric conversions and detect overflow.",
+              "Use strtol, strtoul, or strtod with end pointer checks. Reject on trailing junk or range errors.",
+              "For text input, bound reads with fgets and parse with length limits. Avoid scanf without width specifiers.",
+              "Normalize paths and reject traversal after normalization.",
+              "Use constant format strings with printf-family functions; never pass user input as a format string."
+            ]
+          },
+          "cpp": {
+            "guidance": [
+              "Prefer std::string, std::string_view, and std::vector with explicit length checks.",
+              "Use std::from_chars for numeric parsing and check the returned pointer and error code.",
+              "Constrain regular expressions and timeouts to avoid denial-of-service via catastrophic backtracking.",
+              "Avoid raw pointer parsing; prefer safe abstractions and bounds-aware APIs."
+            ]
+          },
+          "python": {
+            "guidance": [
+              "Use pydantic, marshmallow, or dataclasses with explicit type and range validation for inbound data.",
+              "Never use eval or exec on user input. Avoid pickle, yaml.load (unsafe), and ast.literal_eval on untrusted data.",
+              "For web inputs, rely on framework validators and parsing utilities. Enforce content type and size limits.",
+              "Use parameterized queries with database drivers. Do not assemble SQL with string concatenation."
+            ]
+          },
+          "java": {
+            "guidance": [
+              "Validate with Bean Validation (Jakarta Validation) or explicit checks. Enforce size, pattern, and range.",
+              "Use prepared statements for SQL. Avoid concatenating user input into queries.",
+              "Do not use deserialization on untrusted data. Prefer JSON binding with strict schemas and known types.",
+              "Sanitize or encode data before rendering into HTML, XML, or logs."
+            ]
+          }
+        }
+      },
+      "code_review_checklist": [
+        "All inputs validated for type, format, encoding, length, and range",
+        "Strict schemas used for structured data; unsafe features disabled",
+        "No string concatenation used to build queries or commands",
+        "Normalization done before validation for paths and URLs",
+        "Validation errors return generic messages; detailed info goes only to secure logs",
+        "Logging uses constant format strings; sensitive data redacted",
+        "Dangerous parsers and dynamic execution features are not used on untrusted input"
+      ],
+      "finetune_examples": [
+        {
+          "language": "generic",
+          "instruction": "Validate user input before processing.",
+          "input": "POST /signup { \"email\": \"user@@example..com\", \"age\": \"-5\" }",
+          "output": "Reject the request with specific field errors. Enforce a canonical email pattern, numeric age within range, and correct types. Do not process downstream until inputs pass validation."
+        },
+        {
+          "language": "python",
+          "instruction": "Validate and bind JSON request data safely.",
+          "input": "data = request.get_json(); user = create_user(data)",
+          "output": "Use a schema (for example pydantic) to parse and validate fields, enforce length and pattern constraints, and reject unknown fields before calling create_user."
+        },
+        {
+          "language": "c",
+          "instruction": "Parse an integer from a string safely.",
+          "input": "int n = atoi(buf);",
+          "output": "Use strtol with end pointer and errno checks, verify range, reject trailing characters, and handle errors without undefined behavior."
+        }
+      ]
+    },
+    {
+      "cwe_id": "676",
+      "cwe_name": "Use of Potentially Dangerous Function",
+      "cwe_description": "The product invokes a potentially dangerous function that could introduce a vulnerability if it is used incorrectly, although the function can be used safely with proper controls.",
+      "category": "Language Basics",
+      "category_description": "Core language syntax, variables, data types, control flow, Code Quality Issues, Improper Adherence to Coding Standards. This is applicable for all languages and tasks. Consider the code complexity, maintainability and other code quality attributes.",
+      "applicable_languages": ["language-agnostic"],
+      "Reason_tag": "This CWE involves functions that can be used safely but may introduce vulnerabilities if misused, which is a core aspect of proper coding standards and practices. Ensuring proper usage and understanding of such functions falls under language basics and code quality issues.",
+      "Additional_tags": [ "Input Validation & Sanitization", "Error Handling" ],
+      "mitigations": {
+        "general_rules": [
+          "Prefer safer alternatives where available. If a dangerous function must be used, wrap it with strict validation, bounds checks, and error handling.",
+          "Validate all inputs and outputs. Enforce maximum sizes and formats before calling the function.",
+          "Disable or restrict options that enable code execution, implicit command parsing, or insecure defaults.",
+          "Avoid passing user data to functions that interpret strings as format specifiers, commands, or code.",
+          "Centralize wrappers for dangerous APIs with defense in depth: input validation, timeouts, resource limits, and safe flags.",
+          "Document the rationale for use, constraints, and tests that cover misuse cases."
+        ],
+        "language_specific": {
+          "c": {
+            "guidance": [
+              "Avoid gets, strcpy, strcat, sprintf, and scanf without widths. Use fgets, strlcpy/strlcat (where available), or snprintf.",
+              "Never pass user input as a format string to printf-family functions.",
+              "Be careful with system, popen, and exec* when arguments may contain user input. Use execve with argv arrays and no shell when feasible.",
+              "Use secure variants and explicit length checks for string and memory functions."
+            ]
+          },
+          "cpp": {
+            "guidance": [
+              "Prefer std::string and std::vector with bounds-aware operations.",
+              "Avoid functions that require manual length management when safer STL alternatives exist.",
+              "Be careful with std::system and dynamic loading; avoid where input could influence commands or libraries."
+            ]
+          },
+          "python": {
+            "guidance": [
+              "Avoid eval and exec on any untrusted input.",
+              "Do not use pickle, yaml.load (unsafe), or marshal on data from untrusted sources.",
+              "Use subprocess without shell and pass arguments as a list. Avoid shell=True with user input.",
+              "Limit regex complexity to prevent denial-of-service via catastrophic backtracking."
+            ]
+          },
+          "java": {
+            "guidance": [
+              "Avoid Runtime.exec with shell parsing; use ProcessBuilder with explicit arguments.",
+              "Do not use unsafe deserialization (for example ObjectInputStream) on untrusted data.",
+              "Use prepared statements for SQL and safe libraries for template rendering.",
+              "Limit reflection to controlled, known types with strict access checks."
+            ]
+          }
+        }
+      },
+      "code_review_checklist": [
+        "Safer alternative considered and documented; dangerous function use justified",
+        "Parameters validated for size, type, encoding, and allowed character set",
+        "No user input used as a format string, command, or code",
+        "Timeouts, resource limits, and safe flags configured",
+        "Errors handled without leaking sensitive details; return codes checked",
+        "Automated tests cover misuse and edge cases"
+      ],
+      "finetune_examples": [
+        {
+          "language": "c",
+          "instruction": "Replace dangerous string functions with safe alternatives.",
+          "input": "char buf[64]; strcpy(buf, input); printf(buf);",
+          "output": "Use snprintf with an explicit bound, and print with a constant format string like printf(\"%s\", buf). Validate input length before copy."
+        },
+        {
+          "language": "python",
+          "instruction": "Avoid shell=True with user input.",
+          "input": "subprocess.run(f\"tar -xvf {name}\", shell=True)",
+          "output": "Call subprocess.run([\"tar\", \"-xvf\", name], check=True) and validate that name matches an allow list. Do not use shell=True."
+        },
+        {
+          "language": "java",
+          "instruction": "Avoid unsafe deserialization.",
+          "input": "ObjectInputStream in = new ObjectInputStream(socket.getInputStream()); Object o = in.readObject();",
+          "output": "Reject raw Java serialization for untrusted inputs. Use JSON binding with a strict schema and a whitelist of types."
+        }
+      ]
+    },
+    {
+      "cwe_id": "119",
+      "cwe_name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+      "cwe_description": "The product performs operations on a memory buffer, but reads from or writes to a memory location outside the buffer's intended boundary, which may lead to corruption or disclosure of memory.",
+      "category": "Memory & Resource Management",
+      "category_description": "Dynamic allocation, stack vs. heap usage, pointer arithmetic, resource leaks.",
+      "applicable_languages": ["language-agnostic"],
+      "Reason_tag": "This CWE involves the management of memory buffers and the incorrect access of memory regions, which aligns with memory management practices including dynamic allocation and pointer arithmetic.",
+      "Additional_tags": [ "C Language specific weakness", "CPP Language specific weakness", "Input Validation & Sanitization" ],
+      "mitigations": {
+        "general_rules": [
+          "Perform explicit bounds checks before every read or write. Use size-aware APIs and track lengths separately from buffers.",
+          "Validate all size calculations for integer overflow before allocation and before memcpy or similar operations.",
+          "Initialize pointers and buffers. Ensure strings are null terminated where required by the API.",
+          "Prefer safe library functions or wrappers that take buffer size and return explicit status codes.",
+          "Grow buffers dynamically only up to a defined maximum. Refuse inputs that exceed limits to avoid excessive memory use.",
+          "Use memory-safe abstractions where available. Avoid manual pointer arithmetic unless necessary and well reviewed.",
+          "On failure, do not use partially initialized buffers. Clear sensitive data before free using a guaranteed zeroization API.",
+          "When reading from streams (for example fread or memchr workflows), bound the read by the remaining buffer size and verify the returned count before use."
+        ],
+        "language_specific": {
+          "c": {
+            "guidance": [
+              "Check all allocation results for NULL and compute sizes with overflow checks (for example size_t n; if (n > SIZE_MAX / elem_size) fail).",
+              "Use snprintf, strnlen, memcpy with checked lengths, and memmove when regions may overlap.",
+              "Use fgets with a bound for input. Avoid gets and scanf without widths.",
+              "Validate indices and pointer arithmetic against buffer length. Use openat and fstat when validating file descriptors rather than path strings.",
+              "After fread, verify the number of bytes read before processing; when using memchr, check results and remaining length."
+            ],
+            "checklist": [
+              "All pointers initialized to NULL or valid memory",
+              "All allocations checked for NULL",
+              "All copies and reads bounded by destination size",
+              "All strings explicitly null terminated where required",
+              "Integer overflow checks before size arithmetic and allocation",
+              "Each function return value checked",
+              "All allocated memory freed exactly once",
+              "Sensitive data cleared before free"
+            ]
+          },
+          "cpp": {
+            "guidance": [
+              "Prefer std::vector, std::array, std::string, and std::span for bounds-aware access.",
+              "Use at() for bounds-checked indexing when feasible. Validate all indices from untrusted input.",
+              "Avoid raw new and delete. Use RAII and smart pointers. Verify sizes when constructing containers from external data.",
+              "When interfacing with C APIs, validate sizes and convert safely to size_t."
+            ]
+          },
+          "python": {
+            "guidance": [
+              "Native Python enforces bounds on lists and bytearray, but vulnerabilities arise at library boundaries.",
+              "When using struct, array, memoryview, or NumPy, validate lengths and shapes before operations.",
+              "For I/O, limit reads, check returned sizes, and avoid slicing beyond the received data."
+            ]
+          },
+          "java": {
+            "guidance": [
+              "Array accesses are bounds checked, but ByteBuffer, NIO, and native code can introduce risks.",
+              "Validate lengths before System.arraycopy and ByteBuffer operations.",
+              "When using JNI or unsafe memory operations, enforce strict bounds and validate all sizes."
+            ]
+          }
+        }
+      },
+      "code_review_checklist": [
+        "All reads and writes guarded by explicit bounds checks",
+        "All size arithmetic protected against integer overflow",
+        "Length tracked separately from buffer capacity and validated",
+        "Safe, size-aware APIs used; dangerous functions avoided",
+        "Buffer growth capped by a defined maximum; oversize inputs rejected",
+        "All return values checked; partial reads handled correctly",
+        "Sensitive data wiped before free; no double frees"
+      ],
+      "finetune_examples": [
+        {
+          "language": "c",
+          "instruction": "Fix an overflow when copying input into a fixed-size buffer.",
+          "input": "char buf[64]; strcpy(buf, input);",
+          "output": "Check the length of input, refuse if it exceeds sizeof(buf) - 1, then use snprintf(buf, sizeof(buf), \"%s\", input) to copy safely and enforce null termination."
+        },
+        {
+          "language": "cpp",
+          "instruction": "Guard vector indexing with untrusted indices.",
+          "input": "auto v = std::vector<int>(n); return v[i];",
+          "output": "Validate 0 <= i && i < v.size() before access, or use v.at(i) to get bounds-checked access and handle exceptions appropriately."
+        },
+        {
+          "language": "python",
+          "instruction": "Safely read from a stream into a buffer.",
+          "input": "data = f.read(); header = data[:8]",
+          "output": "Read at most the needed amount with a cap, for example data = f.read(8); ensure len(data) == 8 before parsing."
+        }
+      ]
+    },
+  {
+    "cwe_id": "120",
+    "cwe_name": "Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')",
+    "cwe_description": "The product copies an input buffer to an output buffer without verifying that the size of the input buffer is less than the size of the output buffer, leading to a buffer overflow.",
+    "category": "Memory & Resource Management",
+    "category_description": "Dynamic allocation, stack vs. heap usage, pointer arithmetic, resource leaks.",
+    "mitigations": {
+      "general_rules": [
+        "Ensure that buffer sizes are checked before performing any copy operations. Use safer functions like strncpy or implement bounds checking to prevent overflow."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": [
+      "C",
+      "C++"
+    ],
+    "Reason_tag": "This CWE involves improper handling of memory buffers, leading to potential overflows. Such issues are directly related to how memory and resources are managed, especially in languages like C and C++ where manual memory management is prevalent.",
+    "Additional_tags": [
+      "C Language specific weakness",
+      "CPP Language specific weakness"
+    ]
+  },
+  {
+    "cwe_id": "611",
+    "cwe_name": "Improper Restriction of XML External Entity Reference",
+    "cwe_description": "The product processes an XML document that can contain XML entities with URIs that resolve to documents outside of the intended sphere of control, causing the product to embed incorrect documents into its output.",
+    "category": "Serialization & Deserialization",
+    "category_description": "Safely (de)serializing JSON, XML, or binary data.",
+    "mitigations": {
+      "general_rules": [
+        "When generating code, default to XXE-safe parsing. Do not expand entities. Do not load external DTDs. Do not fetch anything over the network while parsing XML.",
+        "Reject or strip DOCTYPE declarations. Never enable entity expansion.",
+        "Disable external entity resolution and network access in the XML parser.",
+        "Avoid API options that expand entities (for example, NOENT). Prefer secure defaults, and set them explicitly.",
+        "Set tight resource limits (max size, depth, attributes) to prevent Billion Laughs and quadratic blowups.",
+        "Treat XPath/XSLT inputs as untrusted. If XSLT is required, disable document() and network access.",
+        "Validate against a local, whitelisted schema only, with external fetches disabled.",
+        "Impose input limits (size, element depth, attribute count). Fail closed on limit violations.",
+        "Never pass user-controlled XML directly to XSLT. If XSLT is needed, disable reading from network or filesystem and forbid the document() function.",
+        "Log rejections generically. Do not echo attacker-controlled XML back in errors.",
+        "This policy requires the assistant to emit XML parsing code that disables external entities and network access, forbids DOCTYPE, avoids entity expansion flags, and enforces resource limits by default."
+      ],
+      "language_specific": {
+        "c": {
+          "guidance": [
+            "When using libxml2 in C++, apply the same safe configuration as in C.",
+            "Before parsing: xmlDisableExternalEntityLoader(); xmlSubstituteEntitiesDefault(0); xmlLoadExtDtdDefaultValue = 0;",
+            "Use xmlReadMemory or xmlReadFile with XML_PARSE_NONET | XML_PARSE_NOCDATA | XML_PARSE_NOERROR | XML_PARSE_NOWARNING to disable network access and external entities.",
+            "Avoid XML_PARSE_NOENT, as it expands entities and exposes XXE vulnerabilities.",
+            "If using pugixml or tinyxml2, disable external entity loading (these libraries do not fetch external resources by default).",
+            "Ensure the parser runs with bounded input size and depth to prevent Billion Laughs or quadratic blowup attacks."
+          ]
+        },
+        "cpp": {
+          "guidance": [
+            "When using libxml2 in C++, apply the same safe configuration as in C.",
+            "Before parsing: xmlDisableExternalEntityLoader(); xmlSubstituteEntitiesDefault(0); xmlLoadExtDtdDefaultValue = 0;",
+            "Use xmlReadMemory or xmlReadFile with XML_PARSE_NONET | XML_PARSE_NOCDATA | XML_PARSE_NOERROR | XML_PARSE_NOWARNING to disable network access and external entities.",
+            "Avoid XML_PARSE_NOENT, as it expands entities and exposes XXE vulnerabilities.",
+            "If using pugixml or tinyxml2, disable external entity loading (these libraries do not fetch external resources by default).",
+            "Ensure the parser runs with bounded input size and depth to prevent Billion Laughs or quadratic blowup attacks."
+          ]
+        },
+
+        "java": {
+          "guidance": [
+            "DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();",
+            "f.setFeature(\"http://apache.org/xml/features/disallow-doctype-decl\", true);",
+            "f.setFeature(\"http://xml.org/sax/features/external-general-entities\", false);",
+            "f.setFeature(\"http://xml.org/sax/features/external-parameter-entities\", false);",
+            "f.setXIncludeAware(false);",
+            "f.setExpandEntityReferences(false);",
+            "For SAXParserFactory/SchemaFactory, set the same features and setProperty(\"http://javax.xml.XMLConstants/property/accessExternalDTD\", \"\");",
+            "setProperty(\"http://javax.xml.XMLConstants/property/accessExternalSchema\", \"\")."
+          ]
+        },
+        "python": {
+          "guidance": [
+            "Prefer defusedxml (defusedxml.ElementTree.fromstring).",
+            "If using lxml, use parser = etree.XMLParser(resolve_entities=false, no_network=true); and reject DOCTYPE."
+          ]
+        }
+      }
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "This CWE involves the processing of XML data, which includes parsing and deserializing XML documents. It becomes a security risk when XML parsers allow external entities, which can reference resources outside the intended context. This falls under the category of Serialization & Deserialization, as it relates to safely parsing and handling XML data.",
+    "Additional_tags": [
+      "Input Validation & Sanitization",
+      "Data safety and security"
+    ]
+  },
+  {
+    "cwe_id": "22",
+    "cwe_name": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+    "cwe_description": "The product uses external input to construct a pathname that is intended to identify a file or directory that is located underneath a restricted parent directory, but the product does not properly neutralize special elements within the pathname that can cause the pathname to resolve to a location that is outside of the restricted directory.",
+    "category": "File & I/O Handling",
+    "category_description": "Reading, writing, directory traversal, file permissions, path handling.",
+    "mitigations": {
+      "general_rules": [
+        "Validate and sanitize all external input used in path construction to ensure paths resolve within the expected directory.",
+        "Accept a base directory and normalize user paths.",
+        "Reject any path that resolves outside the base directory after normalization.",
+        "Refuse processing of symlinks and directories where a regular file is required."
+      ],
+      "language_specific": {}
+    },
+    "applicable_languages": "Language-agnostic",
+    "Reason_tag": "This CWE involves constructing file paths from external input, which directly relates to handling and manipulation of file and directory paths, making 'File & I/O Handling' the most relevant category.",
+    "Additional_tags": [
+      "Data safety and security"
+    ]
+  }
+]

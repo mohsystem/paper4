@@ -1,0 +1,3 @@
+participant_seniority,pre_findings_mean,post_findings_mean,median_delta_weighted,critical_total_pre,critical_total_post,n
+Junior Developers,14.333333333333334,8.166666666666666,20.0,13,4,6
+Senior Developer,12.666666666666666,10.333333333333334,5.0,11,1,6
