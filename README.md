@@ -74,15 +74,7 @@ The UI will be available at `http://localhost:5000`.
 
 The study was conducted in a specific setting: an identity-centric Java Spring Boot backend under a fixed LLM-assisted development workflow. The findings should therefore be interpreted as evidence under the tested conditions rather than as a universal claim about all developers, all models, or all software domains.
 
-## Repository URL
+## License
 
-GitHub repository:
-
-`https://github.com/mohsystem/paper4/`
-
-## Contact
-
-For questions about the repository or study:
-
-**Mohammed Bataineh**  
-GitHub: [mohsystem](https://github.com/mohsystem)
+The source code in this repository is licensed under the MIT License unless stated otherwise.  
+The manuscript text, appendix materials, figures, and data artifacts remain the intellectual property of the authors and should not be redistributed or reused without permission.
